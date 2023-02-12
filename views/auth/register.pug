@@ -1,0 +1,36 @@
+extends ../layout/index
+
+
+block text 
+    div.py-10
+        h1.text-4xl.my-10.font-extrabold.text-center Property 
+            span.font-normal Store
+        h2.text-center.text-2xl.font-extrabold= page
+
+        if errors 
+            div(class="max-w-md mx-auto my-10")
+                each error in errors 
+                    p.bg-red-600.text-white.uppercase.text-xs.text-center.p-2.mb-1.font-bold= error.msg
+
+        div.mt-8.mx-auto.max-w-md 
+            .bg-white.py-8.px-4.shadow
+                form.space-y-5(method="POST" action="/auth/register" noValidate)
+                    div 
+                        label.block.text-sm.uppercase.text-grey-500.mb-2.font-bold(for="name") Name
+                        input#name.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="name here..." type="text" name="name" value=user ? user.name : "")
+                    div 
+                        label.block.text-sm.uppercase.text-grey-500.mb-2.font-bold(for="email") Email
+                        input#email.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="email here..." type="text" name="email" value=user ? user.email : "")
+                    div
+                        label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="password") Password
+                        input#password.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="password here..." type="password" name="password")
+
+                    div
+                        label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="confirmedPassword") Repetir Password
+                        input#confirmedPassword.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="repeat your password here..." type="password" name="confirmedPassword")
+
+                    div.flex.items-center.justify-between 
+                        a.text-gray-500.text-sx(href="/auth/login") Already have account? Login
+                        a.text-gray-500.text-sx(href="/auth/recover-password") Forgot Password?
+
+                    input(class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 cursor-pointer" type="submit" value="Create Account")
