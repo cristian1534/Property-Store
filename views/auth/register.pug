@@ -15,6 +15,7 @@ block text
         div.mt-8.mx-auto.max-w-md 
             .bg-white.py-8.px-4.shadow
                 form.space-y-5(method="POST" action="/auth/register" noValidate)
+                    input(type="hidden" name="_csrf" value= csrfToken)
                     div 
                         label.block.text-sm.uppercase.text-grey-500.mb-2.font-bold(for="name") Name
                         input#name.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="name here..." type="text" name="name" value=user ? user.name : "")

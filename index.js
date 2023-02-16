@@ -1,7 +1,10 @@
 const express = require("express");
+const csrf = require("csurf");
+const cookieParser = require("cookie-parser");
 const userRoutes = require("./routes/user");
 const db = require("./config/database");
 const app = express();
+require("dotenv").config();
 
 //database connection
 try {
@@ -14,6 +17,8 @@ try {
 
 //data from forms
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(csrf({ cookie: true }));
 
 //views
 app.set("view engine", "pug");
@@ -25,7 +30,7 @@ app.use(express.static("public"));
 //routing
 app.use("/auth", userRoutes);
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log(`Server running on PORT ${port}`);
