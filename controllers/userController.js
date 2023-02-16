@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const { body, validationResult } = require("express-validator");
 const User = require("../model/user");
-const createId = require("../helpers/token");
+const {createId, createJWT} = require("../helpers/token");
 const { recoverPasswordEmail, registerEmail } = require("../helpers/emails");
 
 const loginForm = (req, res) => {
@@ -27,6 +27,40 @@ const authenticate = async (req, res) => {
       csrfToken: req.csrfToken(),
     });
   }
+
+  const { email, password } = req.body;
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    return res.render("auth/login", {
+      page: "Log In",
+      csrfToken: req.csrfToken(),
+      errors: [{ msg: "User does not exist" }],
+    });
+  }
+  if (!user.confirmed) {
+    return res.render("auth/login", {
+      page: "Log In",
+      csrfToken: req.csrfToken(),
+      errors: [{ msg: "You must confirm your account" }],
+    });
+  }
+
+  if (!user.validatePassword(password)) {
+    return res.render("auth/login", {
+      page: "Log In",
+      csrfToken: req.csrfToken(),
+      errors: [{ msg: "Wrong Email or Password" }],
+    });
+  }
+
+  const token = createJWT(user.id)
+  //saving token in cookies
+  return res.cookie("_token", token, {
+    httpOnly: true,
+    secure: true
+  }).redirect("/my-properties")
+
+
 };
 
 const registerForm = (req, res) => {
